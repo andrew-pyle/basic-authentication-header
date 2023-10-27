@@ -70,23 +70,23 @@ describe("BasicAuth can encode Unicode characters", () => {
 					password: "🤣🤣🤣",
 					expected: "Basic dGVzdDEyM0BleGFtcGxlLmNvbTrwn6Sj8J+ko/CfpKM=",
 				},
-				// Source: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
 				{
+					// Source: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
 					username: "example",
 					password: "a Ā 𐀀 文 🦄",
 					expected: "Basic ZXhhbXBsZTphIMSAIPCQgIAg5paHIPCfpoQ=",
 				},
-				// Source: https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
 				{
+					// Source: https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
 					username: "✓ à la mode",
 					password: "unsafe-password",
 					expected: "Basic 4pyTIMOgIGxhIG1vZGU6dW5zYWZlLXBhc3N3b3Jk",
 				},
-				// Source: https://github.com/mathiasbynens/base64#api
 				{
-					username: "foo © bar 𝌆 baz",
-					password: "abc123",
-					expected: "Basic Zm9vIMKpIGJhciDwnYyGIGJhejphYmMxMjM=",
+					username: "🤷🏻‍♂️ has some modifiers",
+					password: "⚠️⚠️⚠️",
+					expected:
+						"Basic 8J+kt/Cfj7vigI3imYLvuI8gaGFzIHNvbWUgbW9kaWZpZXJzOuKaoO+4j+KaoO+4j+KaoO+4jw==",
 				},
 			];
 
