@@ -28,18 +28,24 @@ export class BasicAuth {
 	credentials;
 
 	/**
-	 * @param {{username: string, password: string}} options Username & password to encode
+	 * @param {{username: string, password: string, encoder?: 'detect'|'buffer'|'btoa'}} options Username & password to encode
 	 */
-	constructor({ username, password }) {
+	constructor({ username, password, encoder = "detect" }) {
 		// Create the Basic Auth credential format
 		const rawString = `${username}:${password}`;
 
 		// Use the base64 encoder available in the environment to
 		// encode the credentials
-		if (globalThis.Buffer) {
-			this.credentials = Buffer.from(rawString).toString("base64");
+		if (encoder === "detect") {
+			if ("Buffer" in globalThis) {
+				this.credentials = this.encodeWithBuffer(rawString);
+			} else {
+				this.credentials = this.encodeWithBtoa(rawString);
+			}
+		} else if (encoder.toLowerCase() === "buffer") {
+			this.credentials = this.encodeWithBuffer(rawString);
 		} else {
-			this.credentials = btoa(rawString);
+			this.credentials = this.encodeWithBtoa(rawString);
 		}
 
 		// Assign the complete Authorization header
@@ -48,5 +54,21 @@ export class BasicAuth {
 
 	toString() {
 		return this.encodedString;
+	}
+
+	/**
+	 * Base64 encode the argument using the Node.js global `Buffer`
+	 * @param {string} str
+	 */
+	encodeWithBuffer(str) {
+		return Buffer.from(str).toString("base64");
+	}
+
+	/**
+	 * Base64 encode the argument using the global `btoa`
+	 * @param {string} str
+	 */
+	encodeWithBtoa(str) {
+		return btoa(str);
 	}
 }
