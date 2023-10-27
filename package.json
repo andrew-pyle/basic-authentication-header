@@ -11,7 +11,7 @@
 		"format": "biome format index.js test.js --write",
 		"lint": "oxlint index.js && biome lint index.js",
 		"test": "npm run lint && node --test",
-		"tsc": "tsc index.js --allowJs --declaration --emitDeclarationOnly --target es2021",
+		"tsc": "tsc index.js --allowJs --declaration --emitDeclarationOnly --skipLibCheck --target es2021",
 		"minify": "esbuild index.js --minify --outfile=index.min.js",
 		"build": "npm run tsc && npm run minify",
 		"prepublish": "npm run build"
