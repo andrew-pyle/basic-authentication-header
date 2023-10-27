@@ -31,7 +31,18 @@ export class BasicAuth {
 	 * @param {{username: string, password: string}} options Username & password to encode
 	 */
 	constructor({ username, password }) {
-		this.credentials = btoa(`${username}:${password}`);
+		// Create the Basic Auth credential format
+		const rawString = `${username}:${password}`;
+
+		// Use the base64 encoder available in the environment to
+		// encode the credentials
+		if (globalThis.Buffer) {
+			this.credentials = Buffer.from(rawString).toString("base64");
+		} else {
+			this.credentials = btoa(rawString);
+		}
+
+		// Assign the complete Authorization header
 		this.encodedString = `Basic ${this.credentials}`;
 	}
 
