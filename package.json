@@ -2,14 +2,9 @@
 	"name": "@andrew-pyle/basicauthheader",
 	"version": "0.2.0",
 	"description": "Create Authorization HTTP headers. Compatible with `Headers()`, `Request()`, and `fetch()`.",
-	"keywords": [
-		"http",
-		"Basic Auth",
-		"Authorization",
-		"Header"
-	],
+	"keywords": ["http", "Basic Auth", "Authorization", "Header"],
 	"type": "module",
-	"main": "index.js",
+	"main": "index.min.js",
 	"types": "index.d.ts",
 	"scripts": {
 		"format": "biome format index.js test.js --write",
