@@ -10,6 +10,8 @@ node_modules/
 
 # ---- Different --------
 
-# Dist
-*.d.ts
-*.min.js
+# Source Code
+index.js
+test.js
+
+
