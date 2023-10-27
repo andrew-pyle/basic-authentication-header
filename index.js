@@ -65,10 +65,15 @@ export class BasicAuth {
 	}
 
 	/**
-	 * Base64 encode the argument using the global `btoa`
+	 * Base64 encode the argument using the global `btoa`. Encodes the input string
+	 * as UTF-8 bytes, and encodes these bytes with `btoa`.
+	 * @see https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
+	 *
 	 * @param {string} str
 	 */
 	encodeWithBtoa(str) {
-		return btoa(str);
+		const utf8Bytes = new TextEncoder().encode(str);
+		const utf8BytesString = String.fromCodePoint(...utf8Bytes);
+		return btoa(utf8BytesString);
 	}
 }
