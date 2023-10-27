@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import http from "node:http";
+import { after, before, describe, test } from "node:test";
 import { BasicAuth } from "./index.js";
 
 // Arrange - Create sample username & password
@@ -56,4 +57,42 @@ test("Basic Auth exposes a `credentials` property, containing the base64-encoded
 	const auth = new BasicAuth({ username, password });
 	assert.ok(auth.credentials);
 	assert.equal(auth.credentials, base64Credentials);
+});
+
+describe("HTTP Request to Local HTTP server", () => {
+	// Constants
+	const hostname = "localhost";
+	const port = 3000;
+	let closeServerFn;
+
+	// Set up local HTTP server to reflect Request Headers back in Response body
+	before(() => {
+		const server = http.createServer((req, res) => {
+			res.statusCode = 200;
+			res.setHeader("Content-Type", "application/json");
+			res.end(JSON.stringify(req.headers));
+		});
+		server.listen(
+			port,
+			hostname,
+			() => `Reflection Server running at http://${hostname}:${port}`,
+		);
+
+		closeServerFn = () => server.close();
+	});
+
+	// Close HTTP Server
+	after(() => closeServerFn());
+
+	test("Real HTTP request has expected Authorization Header", async () => {
+		// Make a HTTP request with Authorization header created by BasicAuth
+		const res = await fetch(`http://${hostname}:${port}`, {
+			headers: new Headers({
+				Authorization: new BasicAuth({ username, password }),
+			}),
+		});
+
+		const requestHeaders = await res.json();
+		assert.equal(requestHeaders.authorization, expectedAuthHeader);
+	});
 });
