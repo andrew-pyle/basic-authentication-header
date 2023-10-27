@@ -8,14 +8,14 @@ Construct a Basic Authentication string for the `Authorization` HTTP Header acco
 
 ## Installation
 ```bash
-$ npm i basic-authentication-header
+$ npm i basic-authorization-header
 ```
 
 ## Usage
 Uses only standard JavaScript. Nothing Node.js-specific. Code provided as ES module only.
 ```js
-import { BasicAuth } from 'basic-authentication-header';
-// CommonJS environments can probably use import('basic-authentication-header')
+import { BasicAuth } from 'basic-authorization-header';
+// CommonJS environments can probably use import('basic-authorization-header')
 
 const username = "Aladdin";
 const password = "open sesame";

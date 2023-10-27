@@ -1,5 +1,5 @@
 {
-	"name": "basic-authentication-header",
+	"name": "basic-authorization-header",
 	"private": true,
 	"version": "0.0.0",
 	"description": "Create Authorization HTTP headers. Compatible with `Headers()`, `Request()`, and `fetch()`.",
@@ -13,6 +13,10 @@
 	},
 	"author": "Andrew Pyle",
 	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/andrew-pyle/basic-authorization-header"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "1.3.1",
 		"np": "^8.0.4",
