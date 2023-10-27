@@ -1,5 +1,5 @@
 {
-	"name": "basicauthheader",
+	"name": "@andrew-pyle/basicauthheader",
 	"version": "0.1.0",
 	"description": "Create Authorization HTTP headers. Compatible with `Headers()`, `Request()`, and `fetch()`.",
 	"keywords": ["http", "Basic Auth", "Authorization", "Header"],
