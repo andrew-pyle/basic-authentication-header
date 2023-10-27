@@ -1,8 +1,8 @@
 {
-	"name": "basicauth",
+	"name": "basic-authentication-header",
 	"private": true,
 	"version": "0.1.0",
-	"description": "Helpers to create Authorization HTTP headers. Compatible with `Headers()` and `fetch()`.",
+	"description": "Create Authorization HTTP headers. Compatible with `Headers()` and `fetch()`.",
 	"type": "module",
 	"main": "index.js",
 	"scripts": {

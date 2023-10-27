@@ -6,6 +6,49 @@ Construct a Basic Authentication string for the `Authorization` HTTP Header acco
 >Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
 >```
 
+## Installation
+```bash
+$ npm i basic-authentication-header
+```
+
+## Usage
+Uses only standard JavaScript. Nothing Node.js-specific. Code provided as ES module only.
+```js
+import { BasicAuth } from 'basic-authentication-header';
+// CommonJS environments can probably use import('basic-authentication-header')
+
+const username = "Aladdin";
+const password = "open sesame";
+
+// Authorization Header String
+const basicAuthString = new BasicAuth({ username, password }).toString(); 
+// => "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+
+// Directly Compatible with Web APIs: Headers, Request, fetch
+
+const headers = new Headers({
+  Authorization: new BasicAuth({ username, password })
+});
+// => Headers { authorization: "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" }
+
+const request = new Request("https://example.com", {
+  headers: {
+    Authorization: new BasicAuth({ username, password })
+  }
+});
+// => Response
+
+const response = await fetch("https://example.com", {
+  headers: {
+    Authorization: new BasicAuth({ username, password })
+  }
+});
+// => Response
+
+// Exposes Credentials Property
+const base64EncodedCredentials = new BasicAuth({ username, password }).credentials;
+// => "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
+```
 
 ## Base64 Encoding Strategy
 
@@ -23,11 +66,18 @@ The UTF-8 binary data in the [`Uint8Array` (MDN)][1] is then encoded as Base64 b
 
 ## Prior Art
 - [`basic-authorization-header` (npm)](https://www.npmjs.com/package/basic-authorization-header) 
+  - Node.js Only. Rely on non-standard, global `Buffer` to base64 encode. This package uses the standard [`Uint8Array`][1] or the standard [`btoa()`][3] function.
+  - Use [deprecated `new Buffer(string)`][5], instead of [recommended `Buffer.from(string)`][6]. This package does not.
 - [`basic-auth-header` (npm)](https://www.npmjs.com/package/basic-auth-header)
+  - Node.js Only. Rely on non-standard, global `Buffer` to base64 encode. This package uses the standard [`Uint8Array`][1] or the standard [`btoa()`][3] function.
+  - Use [deprecated `new Buffer(string)`][5], instead of [recommended `Buffer.from(string)`][6]. This package does not.
+- [`http-auth-utils` (npm)](https://www.npmjs.com/package/http-auth-utils)
+  - Larger package: 1.8 kB minified & gzip (Tested at https://bundlephobia.com/package/http-auth-utils@5.0.1)
+  - Seems complicated.
+- [`@mitmaro/http-authorization-header` (npm)](https://www.npmjs.com/package/@mitmaro/http-authorization-header)
+  - Larger package: 1.9 kB minified & gzip (Tested at https://bundlephobia.com/package/@mitmaro/http-authorization-header@1.0.0)
+  - Does not appear to perform the Base64 encoding of credentials—It is left to the caller to perform the encoding.
     
-Both have these negatives: 
-- Node.js Only. Rely on non-standard, global `Buffer` to base64 encode. This package uses the standard [`Uint8Array`][1] or the standard [`btoa()`][3] function.
-- Use [deprecated `new Buffer(string)`][5], instead of [recommended `Buffer.from(string)`][6]. This package does not.
 
 
 [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
