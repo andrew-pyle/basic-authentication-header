@@ -1,5 +1,21 @@
-/** @typedef {{toString: () => string}} Stringable */
+// @ts-check
 
+/**
+ * Class to construct an appropriate string value for a HTTP Authorization Header.
+ *
+ * Relies on existence of a global `btoa()` function.
+ * @example
+ * new Headers({
+ *     Authorization: new BasicAuth({ username, password })
+ * })
+ *
+ * @example
+ * fetch("https://example.com", {
+ *     headers: {
+ *         Authorization: new BasicAuth({ username, password })
+ *     },
+ * });
+ */
 export class BasicAuth {
 	/**
 	 * @type {string} The Basic Auth header string
@@ -12,7 +28,7 @@ export class BasicAuth {
 	credentials;
 
 	/**
-	 * @param {{username: Stringable, password: Stringable}} options Username & password to encode
+	 * @param {{username: string, password: string}} options Username & password to encode
 	 */
 	constructor({ username, password }) {
 		this.credentials = btoa(`${username}:${password}`);
