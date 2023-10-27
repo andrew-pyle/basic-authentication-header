@@ -1,14 +1,8 @@
 {
 	"name": "basic-authorization-header",
-	"private": true,
 	"version": "0.1.0",
 	"description": "Create Authorization HTTP headers. Compatible with `Headers()`, `Request()`, and `fetch()`.",
-	"keywords": [
-		"http",
-		"Basic Auth",
-		"Authorization",
-		"Header"
-	],
+	"keywords": ["http", "Basic Auth", "Authorization", "Header"],
 	"type": "module",
 	"main": "index.js",
 	"types": "index.d.ts",
