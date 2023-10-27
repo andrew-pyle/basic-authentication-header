@@ -1,5 +1,5 @@
-# Basic Authentication Header
-Construct a Basic Authentication string for the `Authorization` HTTP Header according to [RFC 7617][7]:
+# Basic Authorization Header
+Construct a Basic Authorization string for the `Authorization` HTTP Header according to [RFC 7617][7]:
 
 >If the user agent wishes to send the user-id "Aladdin" and password "open sesame", it would use the following header field:
 >```
