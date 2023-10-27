@@ -1,5 +1,5 @@
 {
-	"name": "basic-authorization-header",
+	"name": "basicauthheader",
 	"version": "0.1.0",
 	"description": "Create Authorization HTTP headers. Compatible with `Headers()`, `Request()`, and `fetch()`.",
 	"keywords": ["http", "Basic Auth", "Authorization", "Header"],
@@ -19,7 +19,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/andrew-pyle/basic-authorization-header"
+		"url": "https://github.com/andrew-pyle/basicauthheader"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.3.1",
