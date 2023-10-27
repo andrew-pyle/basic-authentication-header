@@ -1,7 +1,5 @@
 // @ts-check
 
-/** @typedef {'detect'|'buffer'|'btoa'} EncoderOptions */
-
 /**
  * Class to construct an appropriate string value for a HTTP Authorization Header.
  *
@@ -19,16 +17,16 @@
  */
 export class BasicAuth {
 	/**
-	 * @param {{username: string, password: string, encoder?:EncoderOptions }} options Username & password to encode
+	 * @param {{username: string, password: string }} options Username & password to encode
 	 */
-	constructor({ username, password, encoder = "detect" }) {
+	constructor({ username, password }) {
 		// Create the Basic Auth credential format
 		const rawString = `${username}:${password}`;
 
 		/**
 		 * @type {string} The Encoded version of the provided credentials
 		 */
-		this.credentials = this.encode(encoder, rawString);
+		this.credentials = this.encodeUtf8AsBase64(rawString);
 
 		/**
 		 * Assign the complete Authorization header
@@ -46,44 +44,29 @@ export class BasicAuth {
 	}
 
 	/**
-	 * Encode the provided string as Base64 using the specified type of encoder.
-	 * @param {EncoderOptions} encoder
-	 * @param {string} str
-	 */
-	encode(encoder, str) {
-		// Use the base64 encoder available in the environment to
-		// encode the credentials
-		if (encoder === "detect") {
-			if ("Buffer" in globalThis) {
-				return this.encodeWithBuffer(str);
-			} else {
-				return this.encodeWithBtoa(str);
-			}
-		} else if (encoder.toLowerCase() === "buffer") {
-			return this.encodeWithBuffer(str);
-		} else {
-			return this.encodeWithBtoa(str);
-		}
-	}
-
-	/**
-	 * Base64 encode the argument using the Node.js global `Buffer`
-	 * @param {string} str
-	 */
-	encodeWithBuffer(str) {
-		return Buffer.from(str).toString("base64");
-	}
-
-	/**
-	 * Base64 encode the argument using the global `btoa`. Encodes the input string
-	 * as UTF-8 bytes, and encodes these bytes with `btoa`.
+	 * Base64 encode the argument using Uint8Array.prototype.toBase64 or the global `btoa`.
+	 * Encodes the input string as UTF-8 bytes into a Uint8Array, and encodes these
+	 * bytes.
 	 * @see https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
 	 *
 	 * @param {string} str
 	 */
-	encodeWithBtoa(str) {
-		const utf8Bytes = new TextEncoder().encode(str);
-		const utf8BytesString = String.fromCodePoint(...utf8Bytes);
-		return btoa(utf8BytesString);
+	encodeUtf8AsBase64(str) {
+		// const utf8Bytes = new TextEncoder().encode(str);
+		// const utf8BytesString = String.fromCodePoint(...utf8Bytes);
+		const utf8Binary = new TextEncoder().encode(str);
+
+		/**
+		 * Remove custom implementation of Uint8Array.prototype.toBase64()
+		 * once "Uint8Array to/from base64 and hex" proposal lands
+		 * @see https://github.com/tc39/proposal-arraybuffer-base64
+		 */
+		// @ts-expect-error - We are detecting if Uint8Array.prototype.toBase64() has landed
+		if (typeof utf8Binary.toBase64 !== "function") {
+			return btoa(String.fromCodePoint(...utf8Binary));
+		}
+
+		// @ts-expect-error - Use Uint8Array.prototype.toBase64(), if it exists
+		return utf8Binary.toBase64();
 	}
 }

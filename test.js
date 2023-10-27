@@ -59,49 +59,43 @@ test("BasicAuth exposes a `credentials` property, containing the base64-encoded 
 	assert.equal(auth.credentials, base64Credentials);
 });
 
-describe("BasicAuth can encode Unicode characters", () => {
-	const encoders = /** @type {const} */ (["buffer", "btoa"]);
-	for (const encoder of encoders) {
-		test(`Basic Auth can encode Unicode characters with the '${encoder}' encoder`, () => {
-			// Sets of Basic Auth credentials and their expected encoded form
-			const credentials = [
-				{
-					username: "test123@example.com",
-					password: "🤣🤣🤣",
-					expected: "Basic dGVzdDEyM0BleGFtcGxlLmNvbTrwn6Sj8J+ko/CfpKM=",
-				},
-				{
-					// Source: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
-					username: "example",
-					password: "a Ā 𐀀 文 🦄",
-					expected: "Basic ZXhhbXBsZTphIMSAIPCQgIAg5paHIPCfpoQ=",
-				},
-				{
-					// Source: https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
-					username: "✓ à la mode",
-					password: "unsafe-password",
-					expected: "Basic 4pyTIMOgIGxhIG1vZGU6dW5zYWZlLXBhc3N3b3Jk",
-				},
-				{
-					username: "🤷🏻‍♂️ has some modifiers",
-					password: "⚠️⚠️⚠️",
-					expected:
-						"Basic 8J+kt/Cfj7vigI3imYLvuI8gaGFzIHNvbWUgbW9kaWZpZXJzOuKaoO+4j+KaoO+4j+KaoO+4jw==",
-				},
-			];
+test("BasicAuth can encode Unicode characters", () => {
+	// Sets of Basic Auth credentials and their expected encoded form
+	const credentials = [
+		{
+			username: "test123@example.com",
+			password: "🤣🤣🤣",
+			expected: "Basic dGVzdDEyM0BleGFtcGxlLmNvbTrwn6Sj8J+ko/CfpKM=",
+		},
+		{
+			// Source: https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
+			username: "example",
+			password: "a Ā 𐀀 文 🦄",
+			expected: "Basic ZXhhbXBsZTphIMSAIPCQgIAg5paHIPCfpoQ=",
+		},
+		{
+			// Source: https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
+			username: "✓ à la mode",
+			password: "unsafe-password",
+			expected: "Basic 4pyTIMOgIGxhIG1vZGU6dW5zYWZlLXBhc3N3b3Jk",
+		},
+		{
+			username: "🤷🏻‍♂️ has some modifiers",
+			password: "⚠️⚠️⚠️",
+			expected:
+				"Basic 8J+kt/Cfj7vigI3imYLvuI8gaGFzIHNvbWUgbW9kaWZpZXJzOuKaoO+4j+KaoO+4j+KaoO+4jw==",
+		},
+	];
 
-			// Test expected for each unicode credential set
-			for (const { username, password, expected } of credentials) {
-				// Will throw
-				assert.doesNotThrow(() => {
-					const encoded = new BasicAuth({
-						username,
-						password,
-						encoder,
-					}).toString();
-					assert.equal(encoded, expected);
-				});
-			}
+	// Test expected for each unicode credential set
+	for (const { username, password, expected } of credentials) {
+		// Will throw
+		assert.doesNotThrow(() => {
+			const encoded = new BasicAuth({
+				username,
+				password,
+			}).toString();
+			assert.equal(encoded, expected);
 		});
 	}
 });
