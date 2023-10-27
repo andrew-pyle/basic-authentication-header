@@ -67,6 +67,6 @@ export class BasicAuth {
 		}
 
 		// @ts-expect-error - Use Uint8Array.prototype.toBase64(), if it exists
-		return utf8Binary.toBase64();
+		return /** @type {string} */ (utf8Binary.toBase64());
 	}
 }
