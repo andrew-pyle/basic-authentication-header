@@ -2,7 +2,7 @@
 	"name": "basic-authentication-header",
 	"private": true,
 	"version": "0.0.0",
-	"description": "Create Authorization HTTP headers. Compatible with `Headers()` and `fetch()`.",
+	"description": "Create Authorization HTTP headers. Compatible with `Headers()`, `Request()`, and `fetch()`.",
 	"type": "module",
 	"main": "index.js",
 	"scripts": {
