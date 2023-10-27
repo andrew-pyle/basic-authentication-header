@@ -1,9 +1,10 @@
 // @ts-check
 
+/** @typedef {'detect'|'buffer'|'btoa'} EncoderOptions */
+
 /**
  * Class to construct an appropriate string value for a HTTP Authorization Header.
  *
- * Relies on existence of a global `btoa()` function.
  * @example
  * new Headers({
  *     Authorization: new BasicAuth({ username, password })
@@ -18,42 +19,51 @@
  */
 export class BasicAuth {
 	/**
-	 * @type {string} The Basic Auth header string
-	 */
-	encodedString;
-
-	/**
-	 * @type {string} The Encoded version of the provided credentials
-	 */
-	credentials;
-
-	/**
-	 * @param {{username: string, password: string, encoder?: 'detect'|'buffer'|'btoa'}} options Username & password to encode
+	 * @param {{username: string, password: string, encoder?:EncoderOptions }} options Username & password to encode
 	 */
 	constructor({ username, password, encoder = "detect" }) {
 		// Create the Basic Auth credential format
 		const rawString = `${username}:${password}`;
 
+		/**
+		 * @type {string} The Encoded version of the provided credentials
+		 */
+		this.credentials = this.encode(encoder, rawString);
+
+		/**
+		 * Assign the complete Authorization header
+		 * @type {string} The Basic Auth header string
+		 */
+		this.encodedString = `Basic ${this.credentials}`;
+	}
+
+	/**
+	 * Allow the Class to be used directly in Headers() and fetch(), since these
+	 * classes will call their argument's toString() method while being constructed
+	 */
+	toString() {
+		return this.encodedString;
+	}
+
+	/**
+	 * Encode the provided string as Base64 using the specified type of encoder.
+	 * @param {EncoderOptions} encoder
+	 * @param {string} str
+	 */
+	encode(encoder, str) {
 		// Use the base64 encoder available in the environment to
 		// encode the credentials
 		if (encoder === "detect") {
 			if ("Buffer" in globalThis) {
-				this.credentials = this.encodeWithBuffer(rawString);
+				return this.encodeWithBuffer(str);
 			} else {
-				this.credentials = this.encodeWithBtoa(rawString);
+				return this.encodeWithBtoa(str);
 			}
 		} else if (encoder.toLowerCase() === "buffer") {
-			this.credentials = this.encodeWithBuffer(rawString);
+			return this.encodeWithBuffer(str);
 		} else {
-			this.credentials = this.encodeWithBtoa(rawString);
+			return this.encodeWithBtoa(str);
 		}
-
-		// Assign the complete Authorization header
-		this.encodedString = `Basic ${this.credentials}`;
-	}
-
-	toString() {
-		return this.encodedString;
 	}
 
 	/**
